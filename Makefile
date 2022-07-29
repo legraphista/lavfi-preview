@@ -26,32 +26,44 @@ OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
-CXXFLAGS = -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(IMNODES_DIR)
-CXXFLAGS += -g -Wall -Wformat
+CXXFLAGS = -ldl -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends -I$(IMNODES_DIR)
+CXXFLAGS += -std=gnu++17 -lpthread -g -Wall -Wformat
 LIBS =
 
 ##---------------------------------------------------------------------
 ## BUILD FLAGS PER PLATFORM
 ##---------------------------------------------------------------------
+# pkg-config  glfw3 --print-requires-private
 
 ifeq ($(UNAME_S), Linux) #LINUX
-	LIBS += $(LINUX_GL_LIBS) `pkg-config --with-path=$(PKG_CONFIG_PATH) --shared --libs glfw3`
-	LIBS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --shared --libs libavutil`
-	LIBS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --shared --libs libavcodec`
-	LIBS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --shared --libs libavformat`
-	LIBS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --shared --libs libswresample`
-	LIBS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --shared --libs libswscale`
-	LIBS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --shared --libs libavfilter`
-	LIBS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --shared --libs openal`
+	LIBS += $(LINUX_GL_LIBS) `pkg-config --libs glfw3`
+	LIBS += `pkg-config --libs libavutil`
+	LIBS += `pkg-config --libs libavcodec`
+	LIBS += `pkg-config --libs libavformat`
+	LIBS += `pkg-config --libs libswresample`
+	LIBS += `pkg-config --libs libswscale`
+	LIBS += `pkg-config --libs libavfilter`
+	LIBS += `pkg-config --libs openal`
+	LIBS += `pkg-config --libs x11`
+	LIBS += `pkg-config --libs xrandr`
+	LIBS += `pkg-config --libs xinerama`
+	LIBS += `pkg-config --libs xxf86vm`
+	LIBS += `pkg-config --libs xcursor`
 
-	CXXFLAGS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --cflags glfw3`
-	CXXFLAGS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --cflags libavutil`
-	CXXFLAGS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --cflags libavcodec`
-	CXXFLAGS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --cflags libavformat`
-	CXXFLAGS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --cflags libswresample`
-	CXXFLAGS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --cflags libswscale`
-	CXXFLAGS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --cflags libavfilter`
-	CXXFLAGS += `pkg-config --with-path=$(PKG_CONFIG_PATH) --cflags openal`
+	CXXFLAGS += `pkg-config --cflags glfw3`
+	CXXFLAGS += `pkg-config --cflags libavutil`
+	CXXFLAGS += `pkg-config --cflags libavcodec`
+	CXXFLAGS += `pkg-config --cflags libavformat`
+	CXXFLAGS += `pkg-config --cflags libswresample`
+	CXXFLAGS += `pkg-config --cflags libswscale`
+	CXXFLAGS += `pkg-config --cflags libavfilter`
+	CXXFLAGS += `pkg-config --cflags openal`
+	CXXFLAGS += `pkg-config --cflags x11`
+	CXXFLAGS += `pkg-config --cflags xrandr`
+	CXXFLAGS += `pkg-config --cflags xinerama`
+	CXXFLAGS += `pkg-config --cflags xxf86vm`
+	CXXFLAGS += `pkg-config --cflags xcursor`
+	
 	CFLAGS = $(CXXFLAGS)
 endif
 
